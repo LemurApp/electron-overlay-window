@@ -645,6 +645,12 @@ void ow_start_hook(char *target_window_title, void *overlay_window_id) {
   uv_thread_create(&hook_tid, hookThread, NULL);
 }
 
+void ow_change_window(char* target_window_title) {
+  memset(&targetInfo, 0, sizeof(targetInfo));
+  targetInfo.pid = -1;
+  targetInfo.title = target_window_title;
+}
+
 void ow_activate_overlay() {
   [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }

@@ -64,6 +64,9 @@ static uv_thread_t hook_tid;
 // https://www.electronjs.org/docs/api/browser-window#wingetnativewindowhandle
 void ow_start_hook(char* target_window_title, void* overlay_window_id);
 
+// Not yet thread safe.
+void ow_change_window(char* target_window_title);
+
 void ow_activate_overlay();
 
 void ow_focus_target();

@@ -9,8 +9,10 @@ let window: BrowserWindow
 const toggleMouseKey = 'CmdOrCtrl + J'
 const toggleShowKey = 'CmdOrCtrl + K'
 
+console.log("ELECTRON APP");
 function createWindow () {
-  window = new BrowserWindow({
+console.log("ELECTRON WINDOW");
+window = new BrowserWindow({
     width: 400,
     height: 300,
     webPreferences: {
@@ -37,17 +39,7 @@ function createWindow () {
       <script>
         const electron = require('electron');
 
-        electron.ipcRenderer.on('focus-change', (e, state) => {
-          document.getElementById('text1').textContent = (state) ? ' (overlay is clickable) ' : 'clicks go through overlay'
-        });
-
-        electron.ipcRenderer.on('visibility-change', (e, state) => {
-          if (document.body.style.display) {
-            document.body.style.display = null
-          } else {
-            document.body.style.display = 'none'
-          }
-        });
+        
       </script>
     </body>
   `)
@@ -59,9 +51,10 @@ function createWindow () {
 
   OverlayController.attachByTitle(
     window,
-    process.platform === 'darwin' ? 'Untitled' : 'Untitled - Notepad',
-    { hasTitleBarOnMac: true }
+    process.platform === 'darwin' ? 'Aaron - Gloo - Slack' : 'Untitled - Notepad',
+    { hasTitleBarOnMac: false }
   )
+  setTimeout(() => OverlayController.changeWindow('Gloo'), 15_000);
 }
 
 function makeDemoInteractive () {

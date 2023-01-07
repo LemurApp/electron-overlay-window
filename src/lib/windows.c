@@ -342,6 +342,11 @@ void ow_start_hook(char* target_window_title, void* overlay_window_id) {
   uv_thread_create(&hook_tid, hook_thread, NULL);
 }
 
+void ow_change_window(char* target_window_title) {
+  memset(&target_info, 0, sizeof(target_info));
+  target_info.title = target_window_title;
+}
+
 void ow_activate_overlay() {
   SetForegroundWindow(overlay_info.hwnd);
 }

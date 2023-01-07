@@ -185,6 +185,29 @@ napi_value AddonStart(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
+napi_value AddonChangeWindow(napi_env env, napi_callback_info info) {
+  napi_status status;
+
+  size_t info_argc = 1;
+  napi_value info_argv[1];
+  status = napi_get_cb_info(env, info, &info_argc, info_argv, NULL, NULL);
+  NAPI_THROW_IF_FAILED(env, status, NULL);
+
+
+  // [1] Target Window title
+  size_t target_window_title_length;
+  status = napi_get_value_string_utf8(env, info_argv[0], NULL, 0, &target_window_title_length);
+  NAPI_THROW_IF_FAILED(env, status, NULL);
+  char* target_window_title = malloc(sizeof(char) * target_window_title_length + 1);
+  status = napi_get_value_string_utf8(env, info_argv[0], target_window_title, target_window_title_length + 1, NULL);
+  NAPI_THROW_IF_FAILED(env, status, NULL);
+
+  // There's a memory leak here where target_window_title is not freed.
+  ow_change_window(target_window_title);
+
+  return NULL;
+}
+
 napi_value AddonActivateOverlay(napi_env _env, napi_callback_info _info) {
   ow_activate_overlay();
   return NULL;
@@ -208,6 +231,13 @@ NAPI_MODULE_INIT() {
   NAPI_FATAL_IF_FAILED(status, "NAPI_MODULE_INIT", "napi_create_function");
   status = napi_set_named_property(env, exports, "start", export_fn);
   NAPI_FATAL_IF_FAILED(status, "NAPI_MODULE_INIT", "napi_set_named_property");
+
+
+  status = napi_create_function(env, NULL, 0, AddonChangeWindow, NULL, &export_fn);
+  NAPI_FATAL_IF_FAILED(status, "NAPI_MODULE_INIT", "napi_create_function");
+  status = napi_set_named_property(env, exports, "changeWindow", export_fn);
+  NAPI_FATAL_IF_FAILED(status, "NAPI_MODULE_INIT", "napi_set_named_property");
+
 
   status = napi_create_function(env, NULL, 0, AddonActivateOverlay, NULL, &export_fn);
   NAPI_FATAL_IF_FAILED(status, "NAPI_MODULE_INIT", "napi_create_function");

@@ -12,6 +12,7 @@ interface AddonExports {
     cb: (e: any) => void
   ): void
 
+  changeWindow(targetWindowTitle: string): void
   activateOverlay(): void
   focusTarget(): void
 }
@@ -115,7 +116,7 @@ class OverlayControllerGlobal {
     this.events.on('blur', () => {
       this.targetHasFocus = false
 
-      if (isMac || this.focusNext !== 'overlay' && !this.electronWindow.isFocused()) {
+      if (!this.electronWindow.isVisible()) {
         this.electronWindow.hide()
       }
     })
@@ -240,6 +241,9 @@ class OverlayControllerGlobal {
     lib.focusTarget()
   }
 
+  changeWindow(windowTitle: string) {
+    lib.changeWindow(windowTitle);
+  }
   attachByTitle (electronWindow: BrowserWindow, targetWindowTitle: string, options: AttachOptions = {}) {
     if (this.electronWindow) {
       throw new Error('Library can be initialized only once.')
